@@ -16,7 +16,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center max-w-7xl h-16 py-4">
         <div>
           <h1 className="text-2xl font-bold">
-          <Link to="/">Job<span className="text-[#F83002]">portal</span></Link>  
+          <Link to="/">Career<span className="text-[#F83002]">Forge</span></Link>  
           </h1>
         </div>
         <div className="flex items-center gap-10">
