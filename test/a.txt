@@ -1,0 +1,76 @@
+✅ 1️⃣ Final main.jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+import App from '@/App'                // Main layout with Navbar + Footer
+import AuthLayout from '@/components/shared/AuthLayout'  // For Login/Signup (No Navbar/Footer)
+
+import Home from '@/components/pages/Home'
+import Login from '@/pages/Login'
+import Signup from '@/pages/Signup'
+
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,    // Layout with Navbar + Footer
+    children: [
+      { path: "home", element: <Home /> },    // /home
+    ],
+  },
+  {
+    path: "/login",
+    element: <AuthLayout />,  // Layout without Navbar/Footer
+    children: [
+      { path: "", element: <Login /> },       // /login
+    ],
+  },
+  {
+    path: "/signup",
+    element: <AuthLayout />,  // Layout without Navbar/Footer
+    children: [
+      { path: "", element: <Signup /> },      // /signup
+    ],
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <RouterProvider router={appRouter} />
+  </React.StrictMode>
+);
+
+✅ 2️⃣ Final App.jsx (Main App Layout)
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+import Navbar from '@/components/shared/Navbar'
+import Footer from '@/components/shared/Footer'
+import './App.css'
+
+function App() {
+  return (
+    <>
+      <Navbar />
+      <main className="min-h-[80vh]">
+        <Outlet />   {/* Home page or other protected pages */}
+      </main>
+      <Footer />
+    </>
+  )
+}
+
+export default App
+
+✅ 3️⃣ Simple AuthLayout.jsx (Login/Signup Layout)
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+
+function AuthLayout() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Outlet />   {/* Renders Login or Signup */}
+    </div>
+  )
+}
+
+export default AuthLayout

@@ -16,6 +16,7 @@ import { Loader2 } from "lucide-react";
 
 
 
+
 const Login = () => {
   const [input, setInput] = React.useState({
     email: "",
@@ -41,7 +42,11 @@ const Login = () => {
       });
       if (res.data.success) {
         dispatch(setUser(res.data.user));
-        navigate("/");
+        if(res.data.user?.role==="recruiter"){
+          navigate("/admin/companies");
+        }else{
+          navigate("/");
+        }
         toast.success(res.data.message);
       }
     } catch (error) {
