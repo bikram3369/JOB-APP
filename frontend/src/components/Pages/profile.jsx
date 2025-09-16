@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import AppliedJobTable from "@/components/pagecomponents/Profilepagecomponent/AppliedJobTable";
 import UpdateProfileDialog from "@/components/pagecomponents/Profilepagecomponent/UpdateProfileDialog";
+import useGetAppliedJobs from "@/hooks/useGetAppliedJobs";
 
 const profile = () => {
+  useGetAppliedJobs();
   const [open, setOpen] = React.useState(false);
   const { user } = useSelector((store) => store.auth);
   const isResume = user?.profile?.resume && user?.profile?.resumeOriginalName;

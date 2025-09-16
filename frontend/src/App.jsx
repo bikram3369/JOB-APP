@@ -1,66 +1,90 @@
-import { useState } from 'react'
-import './App.css'
-import { Button } from "@/components/ui/button"
-import Navbar from '@/components/shared/navbar'
-import Footer from '@/components/shared/footer'
-import Home from '@/components/Pages/Home'
-import Login from '@/components/auth/Login'
-import Signup from '@/components/auth/Signup'
-import Jobs from '@/components/Pages/Jobs'
-import React from 'react'
-import Browse from '@/components/Pages/Browse'
-import Profile from '@/components/Pages/profile'
-import JobDetails from '@/components/pagecomponents/JObpagecomponent/JobDetails'
-import Companies from '@/admin/companies'
+import { useState } from "react";
+import "./App.css";
+import { Button } from "@/components/ui/button";
+import Navbar from "@/components/shared/navbar";
+import Footer from "@/components/shared/footer";
+import Home from "@/components/Pages/Home";
+import Login from "@/components/auth/Login";
+import Signup from "@/components/auth/Signup";
+import Jobs from "@/components/Pages/Jobs";
+import React from "react";
+import Browse from "@/components/Pages/Browse";
+import Profile from "@/components/Pages/profile";
+import JobDetails from "@/components/pagecomponents/JObpagecomponent/JobDetails";
+import Companies from "@/admin/companies";
+import CompanyCreate from "@/admin/CompanyCreate";
+import CompanySetup from "@/admin/CompanySetup";
+import AdminJobs from "@/admin/AdminJobs";
+import Applicants from "@/admin/Applicants";
 
-import { createBrowserRouter , RouterProvider } from 'react-router-dom'
+
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import PostJob from "./admin/PostJob";
 
 function App() {
   const appRouter = createBrowserRouter([
     {
       path: "/",
-      element: <Home/>
+      element: <Home />,
     },
     {
       path: "/login",
-      element: <Login/>
+      element: <Login />,
     },
     {
       path: "/signup",
-      element: <Signup/>
+      element: <Signup />,
     },
     {
       path: "jobs",
-      element: <Jobs/>
+      element: <Jobs />,
     },
     {
       path: "browse",
-      element: <Browse/>
+      element: <Browse />,
     },
     {
       path: "/profile",
-      element: <Profile/>
+      element: <Profile />,
     },
     {
       path: "/description/:id",
-      element: <JobDetails/>
+      element: <JobDetails />,
     },
 
-      //admin routes
-      {
-    path:"/admin/companies",
-    element: <Companies/>
+    //admin routes
+    {
+      path: "/admin/companies",
+      element: <Companies />,
+    },
+    {
+      path: "/admin/companies/create",
+      element: <CompanyCreate />,
+    },
+    {
+      path: "/admin/companies/:id",
+      element: <CompanySetup />,
+    },
+    {
+      path: "/admin/jobs",
+      element: <AdminJobs />,
+    },
+    {
+      path: "/admin/jobs/create",
+      element: <PostJob />,
+    },
+    {
+    path:"/admin/jobs/:id/applicants",
+    element:<Applicants/>
   },
-    
-  ])
+  ]);
 
   return (
     <>
-      
-      <RouterProvider router={appRouter}/>
-      
+      <RouterProvider router={appRouter} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

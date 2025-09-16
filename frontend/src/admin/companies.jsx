@@ -6,17 +6,20 @@ import CompaniesTable from '@/admin/CompaniesTable'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-// import { setSearchCompanyByText } from '@/redux/filterSlice'
+import { setSearchCompanyByText } from '@/redux/companySlice'
 import { useEffect } from 'react'
+import useGetAllCompanies from '@/hooks/useGetAllCompanies'
+
 
 const companies = () => {
+    useGetAllCompanies();
 
   const [input, setInput] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        // dispatch(setSearchCompanyByText(input));
+        dispatch(setSearchCompanyByText(input));
     },[input]);
 
   return (
