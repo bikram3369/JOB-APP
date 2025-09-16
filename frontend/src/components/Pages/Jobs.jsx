@@ -4,50 +4,66 @@ import Footer from "@/components/shared/footer";
 import FilterCard from "@/components/pagecomponents/JObpagecomponent/filtercard";
 import Job from "@/components/pagecomponents/JObpagecomponent/job";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useEffect } from "react";
+import { motion } from 'framer-motion';
+
+
 
 
 
 
 const Jobs = () => {
-  const { allJobs} = useSelector(store => store.job);
+    const { allJobs, searchedQuery } = useSelector(store => store.job);
+    const [filterJobs, setFilterJobs] = useState(allJobs);
 
-  return (
-    <div className="flex flex-col min-h-screen">
+    useEffect(() => {
+        if (searchedQuery) {
+            const filteredJobs = allJobs.filter((job) => {
+                return job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                    job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                    job.location.toLowerCase().includes(searchedQuery.toLowerCase())
+            })
+            setFilterJobs(filteredJobs)
+        } else {
+            setFilterJobs(allJobs)
+        }
+    }, [allJobs, searchedQuery]);
 
-      {/* Navbar */}
-      <Navbar />
-
-      {/* Main content area */}
-      <div className="flex flex-1 max-w-7xl mx-auto mt-5 gap-5">
-
-        {/* Sidebar */}
-        <div className="w-1/5 bg-white rounded shadow-md border border-gray-200 mb-5">
-          <FilterCard />
-        </div>
-
-        {/* Job List Area */}
-        <div className="flex-1 min-h-[calc(100vh-64px)] w-300 flex flex-col">
-
-          {allJobs.length <= 0 ? (
-            <div className="flex flex-1 items-center justify-center">
-              <span className="text-gray-500 text-lg">Job not found</span>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-5">
-              {allJobs.map((job, index) => (
-                <div key={index}>
-                  <Job job={job} />
+    return (
+        <div>
+            <Navbar />
+            <div className='max-w-7xl mx-auto mt-5'>
+                <div className='flex gap-5'>
+                    <div className='w-20%'>
+                        <FilterCard />
+                    </div>
+                    {
+                        filterJobs.length <= 0 ? <span>Job not found</span> : (
+                            <div className='flex-1 h-[88vh] overflow-y-auto pb-5'>
+                                <div className='grid grid-cols-3 gap-4'>
+                                    {
+                                        filterJobs.map((job) => (
+                                            <motion.div
+                                                initial={{ opacity: 0, x: 100 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                exit={{ opacity: 0, x: -100 }}
+                                                transition={{ duration: 0.3 }}
+                                                key={job?._id}>
+                                                <Job job={job} />
+                                            </motion.div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        )
+                    }
                 </div>
-              ))}
             </div>
-          )}
-          
-        </div>
-      </div>
 
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
-};
-export default Jobs;
+
+        </div>
+    )
+}
+
+export default Jobs
