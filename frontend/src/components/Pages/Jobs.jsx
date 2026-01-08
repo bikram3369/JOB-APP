@@ -13,22 +13,60 @@ import { motion } from 'framer-motion';
 
 
 
-const Jobs = () => {
-    const { allJobs, searchedQuery } = useSelector(store => store.job);
-    const [filterJobs, setFilterJobs] = useState(allJobs);
 
-    useEffect(() => {
-        if (searchedQuery) {
-            const filteredJobs = allJobs.filter((job) => {
-                return job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.location.toLowerCase().includes(searchedQuery.toLowerCase())
-            })
-            setFilterJobs(filteredJobs)
-        } else {
-            setFilterJobs(allJobs)
-        }
-    }, [allJobs, searchedQuery]);
+
+const Jobs = () => {
+    // const { allJobs, searchedQuery } = useSelector(store => store.job);
+    
+
+    // useEffect(() => {
+    //     if (searchedQuery) {
+    //         const filteredJobs = allJobs.filter((job) => {
+    //             return job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+    //                 job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+    //                 job.location.toLowerCase().includes(searchedQuery.toLowerCase())
+    //         })
+    //         setFilterJobs(filteredJobs)
+    //     } else {
+    //         setFilterJobs(allJobs)
+    //     }
+    // }, [allJobs, searchedQuery]);
+  const { allJobs, searchedQuery, filterQuery } = useSelector(store => store.job);
+const [filterJobs, setFilterJobs] = useState([]);  // Initialize as empty array
+
+useEffect(() => {
+    const filteredJobs = allJobs.filter((job) => {
+        const locationQuery = filterQuery?.Location || "";
+        const industryQuery = filterQuery?.Industry || "";
+        const salaryQuery = filterQuery?.Salary || "";
+
+        const isSalaryMatched = () => {
+            if (salaryQuery === "") return true;
+
+            const salaryNumber = Number(job.salary);
+            if (isNaN(salaryNumber)) return false;
+
+            if (salaryQuery === "0-40k") return salaryNumber <= 40000;
+            if (salaryQuery === "42-1lakh") return salaryNumber >= 42000 && salaryNumber <= 100000;
+            if (salaryQuery === "1lakh to 5lakh") return salaryNumber >= 100000 && salaryNumber <= 500000;
+
+            return false;
+        };
+
+        return (
+            (locationQuery === "" || (job.location && job.location.toLowerCase().includes(locationQuery.toLowerCase()))) &&
+            (industryQuery === "" || (job.title && job.title.toLowerCase().includes(industryQuery.toLowerCase()))) &&
+            isSalaryMatched()
+        );
+    });
+
+    setFilterJobs(filteredJobs);
+}, [allJobs, filterQuery]);
+
+
+
+
+
 
     return (
         <div>
