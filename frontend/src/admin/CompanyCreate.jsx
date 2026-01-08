@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '@/components/shared/navbar'
+import Navbar from '@/components/shared/Navbar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'

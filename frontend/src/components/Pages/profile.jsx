@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "@/components/shared/navbar";
+import Navbar from "@/components/shared/Navbar";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";

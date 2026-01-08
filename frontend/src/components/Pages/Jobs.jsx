@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "@/components/shared/navbar";
+import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/footer";
 import FilterCard from "@/components/pagecomponents/JObpagecomponent/filtercard";
 import Job from "@/components/pagecomponents/JObpagecomponent/job";

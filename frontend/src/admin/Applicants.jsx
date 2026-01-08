@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Navbar from '@/components/shared/navbar'
+import Navbar from '@/components/shared/Navbar'
 import ApplicantsTable from '@/admin/ApplicantsTable'
 import axios from 'axios';
 import { APPLICATION_API_END_POINT } from '@/utils/constant';

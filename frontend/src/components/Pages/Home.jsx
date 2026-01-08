@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Navbar from '@/components/shared/navbar'
+import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/footer'
 import HeroSection from '@/components/pagecomponents/homecomponents/heroSection'
 import Categories from '@/components/pagecomponents/homecomponents/Category'

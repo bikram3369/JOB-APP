@@ -1,4 +1,4 @@
-import Navbar from '@/components/shared/navbar'
+import Navbar from '@/components/shared/Navbar'
 import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'

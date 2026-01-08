@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/components/shared/navbar";
+import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/footer";
 import Home from "@/components/Pages/Home";
 import Login from "@/components/auth/Login";

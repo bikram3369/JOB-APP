@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "@/components/shared/navbar";
+import Navbar from "@/components/shared/Navbar";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "../ui/input";
