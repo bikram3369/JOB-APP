@@ -8,44 +8,66 @@ export const register = async (req, res) => {
   try {
     const { fullname, email, phoneNumber, password, role } = req.body;
 
+    // Validate required fields
     if (!fullname || !email || !phoneNumber || !password || !role) {
       return res.status(400).json({
         message: "Something is missing",
         success: false,
       });
     }
-    const file = req.file;
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
-    const user = await User.findOne({ email });
-    if (user) {
+    // Validate profile photo
+    if (!req.file) {
       return res.status(400).json({
-        message: "User already exist with this email.",
+        message: "Profile photo is required",
         success: false,
       });
     }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User already exists with this email.",
+        success: false,
+      });
+    }
+
+    // Upload photo to Cloudinary
+    const fileUri = getDataUri(req.file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+      resource_type: "image",
+    });
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create user
     await User.create({
       fullname,
       email,
       phoneNumber,
       password: hashedPassword,
       role,
-      profile:{
-          profilePhoto:cloudResponse.secure_url,
-      }
+      profile: {
+        profilePhoto: cloudResponse.secure_url,
+      },
     });
 
+    // Success response
     return res.status(201).json({
       message: "Account created successfully.",
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error("REGISTER ERROR:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
   }
 };
+
 export const login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
@@ -98,8 +120,9 @@ export const login = async (req, res) => {
       .status(200)
       .cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpsOnly: true,
-        sameSite: "strict",
+        httpOnly: true, // ✅ correct key
+        sameSite: "lax", // ✅ allows reload + API calls
+        secure: false, // ✅ localhost (true only in production HTTPS)
       })
       .json({
         message: `Welcome back ${user.fullname}`,
@@ -124,23 +147,29 @@ export const updateProfile = async (req, res) => {
   try {
     const { fullname, email, phoneNumber, bio, skills } = req.body;
 
-    const resumeFile = req.files["resume"]?.[0];  // May be undefined
-    const photoFile = req.files["photo"]?.[0];    // May be undefined
+    const resumeFile = req.files["resume"]?.[0]; // May be undefined
+    const photoFile = req.files["photo"]?.[0]; // May be undefined
 
     let resumeCloudResponse, photoCloudResponse;
 
     if (resumeFile) {
       const resumeDataUri = getDataUri(resumeFile);
-      resumeCloudResponse = await cloudinary.uploader.upload(resumeDataUri.content, {
-        resource_type: "auto",
-      });
+      resumeCloudResponse = await cloudinary.uploader.upload(
+        resumeDataUri.content,
+        {
+          resource_type: "auto",
+        }
+      );
     }
 
     if (photoFile) {
       const photoDataUri = getDataUri(photoFile);
-      photoCloudResponse = await cloudinary.uploader.upload(photoDataUri.content, {
-        resource_type: "auto",
-      });
+      photoCloudResponse = await cloudinary.uploader.upload(
+        photoDataUri.content,
+        {
+          resource_type: "auto",
+        }
+      );
     }
 
     let skillsArray;
@@ -148,7 +177,7 @@ export const updateProfile = async (req, res) => {
       skillsArray = skills.split(",");
     }
 
-    const userId = req.id;  // From your auth middleware
+    const userId = req.id; // From your auth middleware
     let user = await User.findById(userId);
 
     if (!user) {
@@ -200,4 +229,3 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
-

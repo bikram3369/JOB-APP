@@ -17,9 +17,10 @@ const filterData = [
   {
     filterType: "Salary",
     array: [
-      { label: "0 - 0.4 LPA", min: 0, max: 0.4 },
-      { label: "0.42 - 1 LPA", min: 0.42, max: 1 },
-      { label: "1 - 5 LPA", min: 1, max: 5 },
+      { label: "0 - 4 LPA", min: 0, max: 4 },
+      { label: "4 - 10 LPA", min: 4.2, max: 10 },
+      { label: "10 - 25 LPA", min: 10, max: 25 },
+      { label: "25 - 50 LPA", min: 25, max: 50 },
     ],
   },
 ];

@@ -69,34 +69,99 @@ export const getCompanyById = async (req, res) => {
         console.log(error);
     }
 }
-export const updateCompany = async (req, res) => {
-    try {
-        const { name, description, website, location } = req.body;
+// export const updateCompany = async (req, res) => {
+//     try {
+//         const { name, description, website, location } = req.body;
 
-        const logoFile = req.files["photo"]?.[0];
+//         const logoFile = req.files["photo"]?.[0];
  
-        // idhar cloudinary ayega
-        const fileUri = getDataUri(logoFile);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-        const logo = cloudResponse.secure_url;
+//         // idhar cloudinary ayega
+//         const fileUri = getDataUri(logoFile);
+//         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+//         const logo = cloudResponse.secure_url;
     
-        const updateData = { name, description, website, location, logo };
-        // remove undefined fields
+//         const updateData = { name, description, website, location, logo };
+//         // remove undefined fields
 
-        const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
+//         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
-        if (!company) {
-            return res.status(404).json({
-                message: "Company not found.",
-                success: false
-            })
+//         if (!company) {
+//             return res.status(404).json({
+//                 message: "Company not found.",
+//                 success: false
+//             })
+//         }
+//         return res.status(200).json({
+//             message:"Company information updated.",
+//             success:true
+//         })
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+export const updateCompany = async (req, res) => {
+  try {
+    const { name, description, website, location } = req.body;
+
+    // ✅ CORRECT for multer().single("photo")
+    const logoFile = req.file;
+
+    let logoUrl;
+
+    if (logoFile) {
+      const fileUri = getDataUri(logoFile);
+      const uploadResult = await cloudinary.uploader.upload(
+        fileUri.content,
+        {
+          resource_type: "image",
+          folder: "company_logos",
+          public_id: `company_${req.params.id}_${Date.now()}`, // 🔥 force new URL
         }
-        return res.status(200).json({
-            message:"Company information updated.",
-            success:true
-        })
-
-    } catch (error) {
-        console.log(error);
+      );
+      logoUrl = uploadResult.secure_url;
     }
-}
+
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (website !== undefined) updateData.website = website;
+    if (location !== undefined) updateData.location = location;
+    if (logoUrl) updateData.logo = logoUrl;
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({
+        message: "No data provided to update.",
+        success: false,
+      });
+    }
+
+    const company = await Company.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    if (!company) {
+      return res.status(404).json({
+        message: "Company not found.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Company information updated.",
+      company,
+      success: true,
+    });
+
+  } catch (error) {
+    console.error("UPDATE COMPANY ERROR:", error);
+    return res.status(500).json({
+      message: "Server error",
+      success: false,
+    });
+  }
+};
