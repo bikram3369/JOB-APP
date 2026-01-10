@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-  origin: "https://codeforces-three.vercel.app", // React frontend
+  origin: "https://job-five-rho.vercel.app/", // React frontend
   credentials: true,
 };
 app.use(cors(corsOptions));
